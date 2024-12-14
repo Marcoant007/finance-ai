@@ -10,3 +10,4 @@ taiwindcss
 
 husky
 lint staged
+git-commit-message linter
