@@ -43,6 +43,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { addTransaction } from "../actions/add-transaction";
 
 type FormSchema = z.infer<typeof formSchema>;
 
@@ -85,8 +86,8 @@ const AddTransactionButton = () => {
     },
   });
 
-  const onSubmit = (data: FormSchema) => {
-    console.log(data);
+  const onSubmit = async (data: FormSchema) => {
+    await addTransaction(data);
   };
 
   return (
