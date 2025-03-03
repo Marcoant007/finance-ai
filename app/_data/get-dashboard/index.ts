@@ -4,8 +4,14 @@ import type {
   TotalExpensePerCategory,
   TransactionPercentagePerType,
 } from "./types";
+import { auth } from "@clerk/nextjs/server";
 
 export const getDashboard = async (month: string) => {
+  const { userId } = await auth();
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
   const whereMonth = {
     date: {
       gte: new Date(`2025-${month}-01`),
@@ -77,6 +83,12 @@ export const getDashboard = async (month: string) => {
     ),
   }));
 
+  const lastTransactions = await db.transaction.findMany({
+    where: { ...whereMonth },
+    orderBy: { date: "desc" },
+    take: 10,
+  });
+
   return {
     balance,
     depositsTotal,
@@ -84,5 +96,6 @@ export const getDashboard = async (month: string) => {
     expensesTotal,
     typesPercentage,
     totalExpensePerCategory,
+    lastTransactions,
   };
 };
