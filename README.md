@@ -16,7 +16,11 @@
 ---
 
 ## 📸 **Demonstração**
-> _Inclua prints do projeto aqui quando disponíveis._
+> Login ![image](https://github.com/user-attachments/assets/1aa1ef84-5ef7-4a9e-a79a-8ee890706fad)
+> Dashboard ![image](https://github.com/user-attachments/assets/70108c54-c31f-4f3b-aad7-c0ec32d1feed)
+> Adicione transações ![image](https://github.com/user-attachments/assets/6d4770d3-c9ad-450a-b46a-ab0283a9fec9)
+> Planos ![image](https://github.com/user-attachments/assets/f9a32ef2-4e5b-4a08-ad5a-d7caa86643b2)
+
 
 ---
 
