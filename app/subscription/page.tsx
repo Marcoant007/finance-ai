@@ -1,15 +1,16 @@
 import { auth } from "@clerk/nextjs/server";
-import Navbar from "../_components/navbar";
-import { redirect } from "next/navigation";
-import { Card, CardContent, CardHeader } from "../_components/ui/card";
 import { CheckIcon, XIcon } from "lucide-react";
-import { Button } from "../_components/ui/button";
+import { redirect } from "next/navigation";
+import Navbar from "../_components/navbar";
+import { Card, CardContent, CardHeader } from "../_components/ui/card";
+import AcquirePlanButton from "./_components/acquire-plan-button";
 
 const Subscription = async () => {
   const { userId } = await auth();
   if (!userId) {
     redirect("/login");
   }
+
   return (
     <>
       <Navbar />
@@ -59,9 +60,7 @@ const Subscription = async () => {
                 <CheckIcon className="text-primary" />
                 <p>Relatório de IA</p>
               </div>
-              <Button className="w-full rounded-full font-bold">
-                Adquirir Plano{" "}
-              </Button>
+              <AcquirePlanButton />
             </CardContent>
           </Card>
         </div>
