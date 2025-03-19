@@ -20,15 +20,31 @@ export const createStripeCheckout = async () => {
     apiVersion: "2025-02-24.acacia",
   });
 
+  // const sessionCheckout = await stripe.checkout.sessions.create({
+  //   payment_method_types: ["card"],
+  //   mode: "subscription",
+  //   success_url: "http://localhost:3001/dashboard",
+  //   cancel_url: "http://localhost:3001/",
+  //   subscription_data: {
+  //     metadata: {
+  //       clerk_user_id: userId,
+  //     },
+  //   },
+  //   line_items: [
+  //     {
+  //       price: STRIPE_PRICE_ID,
+  //       quantity: 1,
+  //     },
+  //   ],
+  // });
+
   const sessionCheckout = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: "subscription",
-    success_url: "http://localhost:3000/dashboard",
-    cancel_url: "http://localhost:3000/",
-    subscription_data: {
-      metadata: {
-        clerk_user_id: userId,
-      },
+    success_url: "http://localhost:3001/dashboard",
+    cancel_url: "http://localhost:3001/",
+    metadata: {
+      clerk_user_id: userId,
     },
     line_items: [
       {
