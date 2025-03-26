@@ -48,13 +48,16 @@ export const POST = async (request: Request) => {
       break;
     }
     case "customer.subscription.deleted": {
-      const subscription = await stripe.subscriptions.retrieve(
-        event.data.object.id,
-      );
-      const clerkUserId = subscription.metadata.clerk_user_id;
+      const subscription = event.data.object as Stripe.Subscription;
+      const clerkUserId = subscription.metadata?.clerk_user_id;
+
       if (!clerkUserId) {
+        console.warn(
+          "Subscription deleted, but no clerk_user_id metadata found",
+        );
         return NextResponse.error();
       }
+
       await clerkClient().users.updateUser(clerkUserId, {
         privateMetadata: {
           stripeCustomerId: null,
@@ -64,6 +67,8 @@ export const POST = async (request: Request) => {
           subscriptionPlan: null,
         },
       });
+
+      break;
     }
   }
 

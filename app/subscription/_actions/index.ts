@@ -8,10 +8,6 @@ export const createStripeCheckout = async () => {
   const STRIPE_PRICE_ID = process.env.STRIPE_PREMIUM_PLAN_PRICE_ID;
   const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
-  console.log(STRIPE_PRICE_ID);
-  console.log(APP_URL);
-  console.log(STRIPE_SECRET_KEY);
-
   const { userId } = await auth();
   if (!userId) {
     throw new Error("Unauthorized");
@@ -39,7 +35,7 @@ export const createStripeCheckout = async () => {
         quantity: 1,
       },
     ],
-    success_url: "http://localhost:3000/dashboard",
+    success_url: "http://localhost:3000/",
     cancel_url: `${APP_URL}/`,
   });
 
