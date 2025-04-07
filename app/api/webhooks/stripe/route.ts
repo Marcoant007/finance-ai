@@ -48,7 +48,9 @@ export const POST = async (request: Request) => {
       break;
     }
     case "customer.subscription.deleted": {
-      const subscription = event.data.object as Stripe.Subscription;
+      const subscription = await stripe.subscriptions.retrieve(
+        event.data.object.id,
+      );
       const clerkUserId = subscription.metadata?.clerk_user_id;
 
       if (!clerkUserId) {
