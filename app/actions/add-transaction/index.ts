@@ -24,6 +24,15 @@ export const upsertTransaction = async (params: UpsertTransaction) => {
   addTransactionSchema.parse(params);
   const { userId } = await auth();
 
+  console.log("User ID:", userId);
+  console.log("Transaction Params:", params);
+  console.log("Transaction Type:", params.type);
+  console.log("Transaction Category:", params.category);
+  console.log("Transaction Payment Method:", params.paymentMethod);
+  console.log("Transaction Date:", params.date);
+  console.log("Transaction Amount:", params.amount);
+  console.log("Transaction Name:", params.name);
+
   if (!userId) {
     throw new Error("Unauthorized");
   }

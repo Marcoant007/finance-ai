@@ -41,6 +41,16 @@ const Navbar = () => {
         >
           Assinaturas{" "}
         </Link>
+        {/* <Link
+          href="/upload"
+          className={
+            pathName === "/upload"
+              ? "font-bold text-primary"
+              : "text-muted-foreground"
+          }
+        >
+          Upload{" "}
+        </Link> */}
       </div>
       <UserButton showName />
     </nav>

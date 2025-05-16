@@ -2,7 +2,7 @@
 
 import { Button } from "@/app/_components/ui/button";
 import UpsertTransactionalDialog from "@/app/_components/upsert-transaction-dialog";
-import { Transaction } from "@prisma/client";
+import type { Transaction } from "@prisma/client";
 import { PencilIcon } from "lucide-react";
 import { useState } from "react";
 
