@@ -41,7 +41,7 @@ const Navbar = () => {
         >
           Assinaturas{" "}
         </Link>
-        {/* <Link
+        <Link
           href="/upload"
           className={
             pathName === "/upload"
@@ -50,7 +50,7 @@ const Navbar = () => {
           }
         >
           Upload{" "}
-        </Link> */}
+        </Link>
       </div>
       <UserButton showName />
     </nav>

@@ -23,6 +23,19 @@ interface CsvRecord {
   "Forma de Pagamento": string;
 }
 
+const categoryMap: Record<string, TransactionCategory> = {
+  Alimentação: "FOOD",
+  Transporte: "TRANSPORTATION",
+  Entretenimento: "ENTERTAINMENT",
+  Outros: "OTHER",
+};
+
+const paymentMethodMap: Record<string, TransactionPaymentMethod> = {
+  Dinheiro: "CASH",
+  "Cartão de Crédito": "CREDIT_CARD",
+  "Cartão de Débito": "DEBIT_CARD",
+};
+
 export async function parseCsv(buffer: Buffer): Promise<Transaction[]> {
   const content = buffer.toString("utf-8");
   console.log("CSV Content:", content);
@@ -43,8 +56,9 @@ export async function parseCsv(buffer: Buffer): Promise<Transaction[]> {
       name: record.Nome || "Sem descrição",
       amount: Math.abs(amount),
       type: isIncome ? "DEPOSIT" : "EXPENSE",
-      category: "OTHER",
-      paymentMethod: "CREDIT_CARD",
+      category: categoryMap[record.Categoria] ?? "OTHER",
+      paymentMethod:
+        paymentMethodMap[record["Forma de Pagamento"]] ?? "CREDIT_CARD",
       date: new Date(record.Data),
     };
   });

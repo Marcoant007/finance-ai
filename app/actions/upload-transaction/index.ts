@@ -2,8 +2,6 @@
 
 import { upsertTransaction } from "../add-transaction";
 import { parseCsv } from "./csv/parse-csv";
-import { parseOfx } from "./ofx";
-import { parsePdf } from "./pdf";
 
 export async function uploadTransactionsFile(formData: FormData) {
   console.log("uploadTransactionsFile", formData);
@@ -27,9 +25,9 @@ export async function uploadTransactionsFile(formData: FormData) {
     if (extension === "csv") {
       transactions = await parseCsv(buffer);
     } else if (extension === "ofx") {
-      transactions = await parseOfx(buffer);
+      // transactions = await parseOfx(buffer);
     } else if (extension === "pdf") {
-      transactions = await parsePdf(buffer);
+      // transactions = await parsePdf(buffer);
     } else {
       return {
         success: false,
@@ -39,9 +37,13 @@ export async function uploadTransactionsFile(formData: FormData) {
 
     console.log("transactions: ", transactions);
 
-    if (transactions !== undefined) {
+    if (transactions !== undefined && transactions.length > 0) {
       for (const tx of transactions) {
-        await upsertTransaction(tx);
+        try {
+          await upsertTransaction(tx);
+        } catch (err) {
+          console.error("❌ Erro ao salvar transação:", tx, err);
+        }
       }
     }
 

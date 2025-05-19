@@ -17,8 +17,6 @@ interface Transaction {
 export async function parsePdf(buffer: Buffer): Promise<Transaction[]> {
   const data = await pdf(buffer);
   const text = data.text;
-
-  // Exemplo: cada linha com "01/04/2024 Amazon -129,90"
   const lines = text
     .split("\n")
     .filter((line: string) => /\d{2}\/\d{2}\/\d{4}/.test(line));
