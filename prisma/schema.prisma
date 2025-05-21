@@ -37,6 +37,10 @@ enum TransactionCategory {
   SALARY
   EDUCATION
   OTHER
+  SIGNATURE
+  FOOD_DELIVERY
+  GAMING
+  SERVICES
 }
 
 enum TransactionPaymentMethod {

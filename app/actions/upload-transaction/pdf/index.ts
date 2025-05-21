@@ -1,18 +1,5 @@
+import type { Transaction } from "@/app/utils/interface/transaction-interface";
 import pdf from "pdf-parse";
-import type {
-  TransactionCategory,
-  TransactionPaymentMethod,
-  TransactionType,
-} from "@prisma/client";
-
-interface Transaction {
-  name: string;
-  amount: number;
-  type: TransactionType;
-  category: TransactionCategory;
-  paymentMethod: TransactionPaymentMethod;
-  date: Date;
-}
 
 export async function parsePdf(buffer: Buffer): Promise<Transaction[]> {
   const data = await pdf(buffer);

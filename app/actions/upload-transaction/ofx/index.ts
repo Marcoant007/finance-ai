@@ -19,18 +19,5 @@ export async function parseOfx(buffer: Buffer): Promise<Transaction[]> {
   const data = ofx.parse(content);
   console.log(data);
   const transactions: Transaction[] = [];
-
-  // biome-ignore lint/complexity/noForEach: <explanation>
-  //   data.bankTransactions.forEach(tx => {
-  //     transactions.push({
-  //       name: tx.memo || tx.name || "Sem descrição",
-  //       amount: Math.abs(tx.amount),
-  //       type: tx.amount >= 0 ? "INCOME" : "EXPENSE",
-  //       category: "OTHER",
-  //       paymentMethod: "BANK_TRANSFER",
-  //       date: new Date(tx.date),
-  //     });
-  //   });
-
   return transactions;
 }

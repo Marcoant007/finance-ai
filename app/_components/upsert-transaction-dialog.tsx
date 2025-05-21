@@ -118,6 +118,7 @@ const UpsertTransactionalDialog = ({
         }
       }}
     >
+      {/* biome-ignore lint/style/useSelfClosingElements: <explanation> */}
       <DialogTrigger asChild></DialogTrigger>
       <DialogContent>
         <DialogHeader>

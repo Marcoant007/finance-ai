@@ -1,60 +1,44 @@
 "use server";
 
+import type { Transaction } from "@/app/utils/interface/transaction-interface";
 import { upsertTransaction } from "../add-transaction";
 import { parseCsv } from "./csv/parse-csv";
+import { parseOfx } from "./ofx";
 
-export async function uploadTransactionsFile(formData: FormData) {
-  console.log("uploadTransactionsFile", formData);
-  const file = formData.get("file") as File;
+export async function uploadTransactionsFile(
+  formData: FormData,
+): Promise<
+  | { success: true; transactions: Transaction[] }
+  | { success: false; error: string }
+> {
+  const file = formData.get("file") as File | null;
+
   if (!file) {
-    return {
-      success: false,
-      error: "Arquivo não encontrado",
-    };
+    return { success: false, error: "Arquivo não encontrado" };
   }
 
+  const extension = file.name.split(".").pop()?.toLowerCase();
   const buffer = Buffer.from(await file.arrayBuffer());
-  const extension = file.name.split(".").pop()?.toLocaleLowerCase();
 
-  // biome-ignore lint/suspicious/noImplicitAnyLet: <explanation>
-  let transactions;
-
-  console.log(extension);
+  if (!extension || !["csv", "ofx"].includes(extension)) {
+    return { success: false, error: "Formato de arquivo não suportado" };
+  }
 
   try {
-    if (extension === "csv") {
-      transactions = await parseCsv(buffer);
-    } else if (extension === "ofx") {
-      // transactions = await parseOfx(buffer);
-    } else if (extension === "pdf") {
-      // transactions = await parsePdf(buffer);
-    } else {
-      return {
-        success: false,
-        error: "Formato de arquivo não suportado",
-      };
-    }
+    const transactions =
+      extension === "csv" ? await parseCsv(buffer) : await parseOfx(buffer);
 
-    console.log("transactions: ", transactions);
-
-    if (transactions !== undefined && transactions.length > 0) {
-      for (const tx of transactions) {
-        try {
-          await upsertTransaction(tx);
-        } catch (err) {
-          console.error("❌ Erro ao salvar transação:", tx, err);
-        }
+    for (const tx of transactions) {
+      try {
+        await upsertTransaction(tx);
+      } catch (err) {
+        console.error("❌ Erro ao salvar transação:", tx, err);
       }
     }
 
-    return {
-      success: true,
-    };
+    return { success: true, transactions };
   } catch (error) {
-    console.error(error);
-    return {
-      success: false,
-      error: "Erro ao processar o arquivo",
-    };
+    console.error("❌ Erro ao processar o arquivo:", error);
+    return { success: false, error: "Erro ao processar o arquivo" };
   }
 }

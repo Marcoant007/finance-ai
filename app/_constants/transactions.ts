@@ -17,12 +17,16 @@ export const TRANSACTION_PAYMENT_METHOD_ICONS = {
 export const TRANSACTION_CATEGORY_LABELS = {
   EDUCATION: "Educação",
   ENTERTAINMENT: "Entretenimento",
+  SERVICES: "Serviços",
   FOOD: "Alimentação",
+  FOOD_DELIVERY: "Lanche",
+  GAMING: "Jogos",
   HEALTH: "Saúde",
   HOUSING: "Moradia",
   OTHER: "Outros",
   SALARY: "Salário",
   TRANSPORTATION: "Transporte",
+  SIGNATURE: "Assinatura",
   UTILITY: "Utilidades",
 };
 

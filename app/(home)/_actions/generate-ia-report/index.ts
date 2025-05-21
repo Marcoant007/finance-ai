@@ -3,7 +3,7 @@
 import { db } from "@/app/_lib/prisma";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import OpenAI from "openai";
-import { GenerateAIReportSchema, generateIAReportSchema } from "./schema";
+import { type GenerateAIReportSchema, generateIAReportSchema } from "./schema";
 
 export const generateIAReport = async ({ month }: GenerateAIReportSchema) => {
   generateIAReportSchema.parse({ month });
