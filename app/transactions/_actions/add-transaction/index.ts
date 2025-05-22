@@ -8,6 +8,7 @@ import type {
   TransactionType,
 } from "@prisma/client";
 import { addTransactionSchema } from "./schema";
+import { revalidatePath } from "next/cache";
 
 interface UpsertTransaction {
   id?: string;
@@ -41,4 +42,6 @@ export const upsertTransaction = async (params: UpsertTransaction) => {
       console.error("❌ Erro ao criar transação:", err);
     }
   }
+
+  revalidatePath("/transactions");
 };
