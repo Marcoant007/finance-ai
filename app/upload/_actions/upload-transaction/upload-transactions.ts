@@ -28,20 +28,35 @@ export async function uploadTransactionsFile(
     const transactions =
       extension === "csv" ? await parseCsv(buffer) : await parseOfx(buffer);
 
-    for (const tx of transactions) {
+    for (const transaction of transactions) {
       try {
-        await upsertTransaction(tx);
+        await upsertTransaction(transaction);
       } catch (err) {
         console.error("❌ Erro ao salvar transação:", err);
         throw new Error(
-          `Erro ao salvar transação: ${tx.name} - ${tx.amount} - ${tx.date}`,
+          `Erro ao salvar transação: ${transaction.name} - ${transaction.amount} - ${transaction.date}`,
         );
       }
     }
 
     return { success: true, transactions };
-  } catch (error) {
+  } catch (error: unknown) {
+    let rawMessage = "";
+
+    if (error instanceof Error) {
+      rawMessage = error.message;
+    }
+
+    const isCsvParseError =
+      rawMessage.includes("Invalid") || rawMessage.includes("CSV");
+
     console.error("❌ Erro ao processar o arquivo:", error);
-    return { success: false, error: "Erro ao processar o arquivo" };
+
+    return {
+      success: false,
+      error: isCsvParseError
+        ? "Erro no formato do CSV. Verifique se os valores estão entre aspas corretamente."
+        : "Erro ao processar o arquivo.",
+    };
   }
 }
