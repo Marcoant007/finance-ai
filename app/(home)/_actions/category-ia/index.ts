@@ -43,6 +43,8 @@ export async function detectTransactionDataWithIA(title: string): Promise<{
   const prompt = `
 Com base no título da transação abaixo, identifique:
 
+Por default coloque a forma de pagamento como "CREDIT_CARD".
+
 - O tipo da transação (TransactionType): EXPENSE, DEPOSIT ou INVESTMENT
 - A categoria da transação (TransactionCategory): ${VALID_CATEGORIES.join(", ")}
 - O método de pagamento (TransactionPaymentMethod): ${VALID_METHODS.join(", ")}

@@ -13,7 +13,7 @@ import {
   TRANSACTION_PAYMENT_METHOD_OPTIONS,
   TRANSACTION_TYPE_OPTIONS,
 } from "../_constants/transactions";
-import { upsertTransaction } from "../actions/add-transaction";
+import { upsertTransaction } from "../transactions/_actions/add-transaction";
 import { DatePicker } from "./date-picker";
 import { MoneyInput } from "./money-input";
 import { Button } from "./ui/button";

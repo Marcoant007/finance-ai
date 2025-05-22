@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { uploadTransactionsFile } from "../actions/upload-transaction";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import type { Transaction } from "../utils/interface/transaction-interface";
+import { Input } from "../../_components/ui/input";
+import { Button } from "../../_components/ui/button";
+import type { Transaction } from "../../utils/interface/transaction-interface";
+import { toast } from "sonner";
+import { uploadTransactionsFile } from "../_actions/upload-transaction/upload-transactions";
+import { Loader2Icon } from "lucide-react";
 
 interface Props {
   onSuccess: (transactions: Transaction[]) => void;
@@ -25,12 +27,13 @@ export function TransactionsUploader({ onSuccess }: Props) {
       const result = await uploadTransactionsFile(formData);
 
       if (result.success) {
+        toast.success("Transações importadas com sucesso!");
         onSuccess(result.transactions);
       } else {
-        alert(result.error || "Erro ao importar transações");
+        toast.error(result.error || "Erro ao importar transações");
       }
     } catch (err) {
-      alert("Erro inesperado ao importar transações");
+      toast.error("Erro inesperado ao importar transações");
       console.error(err);
     } finally {
       setLoading(false);
@@ -45,6 +48,7 @@ export function TransactionsUploader({ onSuccess }: Props) {
         onChange={(e) => setFile(e.target.files?.[0] || null)}
       />
       <Button disabled={!file || loading} onClick={handleUpload}>
+        {loading && <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />}
         {loading ? "Importando..." : "Importar transações"}
       </Button>
     </div>

@@ -1,9 +1,9 @@
 "use server";
 
+import { upsertTransaction } from "@/app/transactions/_actions/add-transaction";
 import type { Transaction } from "@/app/utils/interface/transaction-interface";
-import { upsertTransaction } from "../add-transaction";
 import { parseCsv } from "./csv/parse-csv";
-import { parseOfx } from "./ofx";
+import { parseOfx } from "./ofx/parse-ofx";
 
 export async function uploadTransactionsFile(
   formData: FormData,
@@ -32,7 +32,10 @@ export async function uploadTransactionsFile(
       try {
         await upsertTransaction(tx);
       } catch (err) {
-        console.error("❌ Erro ao salvar transação:", tx, err);
+        console.error("❌ Erro ao salvar transação:", err);
+        throw new Error(
+          `Erro ao salvar transação: ${tx.name} - ${tx.amount} - ${tx.date}`,
+        );
       }
     }
 

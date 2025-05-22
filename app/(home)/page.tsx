@@ -12,6 +12,7 @@ import LastTransactions from "./_components/last-transactions";
 import TransactionsPieChart from "./_components/transactions-pie-chart";
 import { canUserAddTransaction } from "../_data/can-user-add-transaction";
 import IAReportsButton from "./_components/ia-reports-button";
+import { UploadTransactionsWrapper } from "../upload/_components/upload-transactions-wrapper";
 
 interface HomeProps {
   searchParams: {
@@ -20,16 +21,17 @@ interface HomeProps {
 }
 
 const Home = async ({ searchParams: { month } }: HomeProps) => {
+  const monthIsInvalid = !month || !isMatch(month, "MM");
+
+  if (monthIsInvalid) {
+    const currentMonth = String(new Date().getMonth() + 1).padStart(2, "0");
+    redirect(`?month=${currentMonth}`);
+  }
+
   const { userId } = await auth();
 
   if (!userId) {
     redirect("/login");
-  }
-
-  const monthIsInvalid = !month || !isMatch(month, "MM");
-
-  if (monthIsInvalid) {
-    redirect(`?month=${new Date().getMonth() + 1}`);
   }
 
   const dashboard = await getDashboard(month);
@@ -44,6 +46,7 @@ const Home = async ({ searchParams: { month } }: HomeProps) => {
         <div className="flex justify-between">
           <h1 className="text-2xl font-bold">Dashboard</h1>
           <div className="flex items-center gap-3">
+            <UploadTransactionsWrapper />
             <IAReportsButton month={month} hasPremiumPlan={hasPremiumPlan} />
             <TimeSelect />
           </div>
