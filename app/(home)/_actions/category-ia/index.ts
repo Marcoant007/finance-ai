@@ -41,23 +41,23 @@ export async function detectTransactionDataWithIA(title: string): Promise<{
   paymentMethod: TransactionPaymentMethod;
 }> {
   const prompt = `
-Com base no título da transação abaixo, identifique:
+    Com base no título da transação abaixo, identifique:
 
-Por default coloque a forma de pagamento como "CREDIT_CARD".
+    Por default coloque a forma de pagamento como "CREDIT_CARD".
 
-- O tipo da transação (TransactionType): EXPENSE, DEPOSIT ou INVESTMENT
-- A categoria da transação (TransactionCategory): ${VALID_CATEGORIES.join(", ")}
-- O método de pagamento (TransactionPaymentMethod): ${VALID_METHODS.join(", ")}
+    - O tipo da transação (TransactionType): EXPENSE, DEPOSIT ou INVESTMENT
+    - A categoria da transação (TransactionCategory): ${VALID_CATEGORIES.join(", ")}
+    - O método de pagamento (TransactionPaymentMethod): ${VALID_METHODS.join(", ")}
 
-Retorne **apenas** no seguinte formato JSON:
-{
-  "type": "EXPENSE",
-  "category": "FOOD",
-  "paymentMethod": "CREDIT_CARD"
-}
+    Retorne **apenas** no seguinte formato JSON:
+    {
+      "type": "EXPENSE",
+      "category": "FOOD",
+      "paymentMethod": "CREDIT_CARD"
+    }
 
-Título: "${title}"
-`;
+    Título: "${title}"
+  `;
 
   try {
     const completion = await openai.chat.completions.create({

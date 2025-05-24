@@ -17,6 +17,7 @@ import Link from "next/link";
 import { useState } from "react";
 import Markdown from "react-markdown";
 import { generateIAReport } from "../_actions/generate-ia-report";
+import { logger } from "@/logger";
 
 interface AIReportButtonProps {
   hasPremiumPlan: boolean;
@@ -33,7 +34,7 @@ const IAReportsButton = ({ month, hasPremiumPlan }: AIReportButtonProps) => {
       const iaReport = await generateIAReport({ month });
       setReport(iaReport);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     } finally {
       setReportLoading(false);
     }

@@ -1,8 +1,8 @@
 import type { Transaction } from "@/app/utils/interface/transaction-interface";
 import { parse } from "csv-parse/sync";
-import { buildTransactionProcessingChain } from "./build-transaction";
+import { buildTransactionProcessingChain } from "../build-transaction";
 import { mapHeaders } from "@/app/upload/_actions/upload-transaction/csv/mapper/global-mapper-header";
-import { parseCsvRow } from "./utils/parse-csv-rows";
+import { parseCsvRow } from "./parse-csv-rows";
 
 export async function parseCsv(buffer: Buffer): Promise<Transaction[]> {
   const content = buffer.toString("utf-8").replace(/^\uFEFF/, "");

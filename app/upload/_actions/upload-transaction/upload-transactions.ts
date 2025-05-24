@@ -2,7 +2,7 @@
 
 import { upsertTransaction } from "@/app/transactions/_actions/add-transaction";
 import type { Transaction } from "@/app/utils/interface/transaction-interface";
-import { parseCsv } from "./csv/parse-csv";
+import { parseCsv } from "./csv/parser/parse-csv";
 import { parseOfx } from "./ofx/parse-ofx";
 
 export async function uploadTransactionsFile(
