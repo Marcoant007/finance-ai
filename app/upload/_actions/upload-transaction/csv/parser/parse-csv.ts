@@ -17,6 +17,7 @@ export async function parseCsv(buffer: Buffer): Promise<Transaction[]> {
   if (!rawRecords.length) return [];
 
   const headerMap = mapHeaders(Object.keys(rawRecords[0]));
+  console.log("HEADER MAP: ", headerMap);
   const handlerChain = buildTransactionProcessingChain();
 
   const transactions: Transaction[] = [];

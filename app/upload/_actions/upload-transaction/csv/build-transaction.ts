@@ -1,20 +1,19 @@
 import type { Transaction } from "@/app/utils/interface/transaction-interface";
-import { SetDefaultValuesHandler } from "./handlers/default-handlers";
-import { ValidateCategoryHandler } from "./handlers/validate-category-handler";
-import { EnrichWithIAHandler } from "./handlers/enrich-with-ia-handler";
+import { NormalizeTransactionHandler } from "./handlers/normalize-handler";
+import { EnrichTransactionWithIAHandler } from "./handlers/enrich-with-ia-handler";
 import { FinalizeTransactionHandler } from "./handlers/finalize-transaction-handler";
 
 export function buildTransactionProcessingChain(): {
-  handle(transaction: Partial<Transaction>): Promise<Transaction>;
+  handle(transaction: Partial<Transaction>): Promise<Partial<Transaction>>;
 } {
-  const setDefaults = new SetDefaultValuesHandler();
-  const validateCategory = new ValidateCategoryHandler();
-  const enrichWithIA = new EnrichWithIAHandler();
+  const normalize = new NormalizeTransactionHandler();
+  const enrich = new EnrichTransactionWithIAHandler();
   const finalize = new FinalizeTransactionHandler();
 
-  setDefaults.setNext(validateCategory).setNext(enrichWithIA).setNext(finalize);
+  normalize.setNext(enrich).setNext(finalize);
 
-  return setDefaults as unknown as {
-    handle(transaction: Partial<Transaction>): Promise<Transaction>;
+  return {
+    handle: (transaction) =>
+      normalize.handle(transaction) as Promise<Transaction>,
   };
 }

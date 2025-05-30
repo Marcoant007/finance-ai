@@ -7,8 +7,8 @@ import type {
 export interface Transaction {
   name: string;
   amount: number;
-  type: TransactionType;
-  category: TransactionCategory;
-  paymentMethod: TransactionPaymentMethod;
   date: Date;
+  type: TransactionType;
+  paymentMethod: TransactionPaymentMethod;
+  category: TransactionCategory | string;
 }

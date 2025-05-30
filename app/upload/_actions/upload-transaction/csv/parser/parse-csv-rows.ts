@@ -1,9 +1,5 @@
 import type { Transaction } from "@/app/utils/interface/transaction-interface";
-import {
-  TransactionCategory,
-  TransactionPaymentMethod,
-  TransactionType,
-} from "@prisma/client";
+import { TransactionPaymentMethod, TransactionType } from "@prisma/client";
 
 export function parseCsvRow(
   row: Record<string, string>,
@@ -41,13 +37,7 @@ export function parseCsvRow(
         break;
 
       case "category":
-        if (
-          Object.values(TransactionCategory).includes(
-            value as TransactionCategory,
-          )
-        ) {
-          transaction.category = value as TransactionCategory;
-        }
+        transaction.category = value;
         break;
 
       case "paymentMethod":
@@ -62,5 +52,6 @@ export function parseCsvRow(
     }
   }
 
+  console.log("Parsed CSV Transaction: ", transaction);
   return transaction;
 }

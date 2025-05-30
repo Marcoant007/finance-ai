@@ -21,15 +21,19 @@ export class FinalizeTransactionHandler extends AbstractTransactionHandler {
       throw new Error("Transação inválida: campo 'date' obrigatório");
     }
 
-    if (
-      !transaction.type ||
-      !transaction.category ||
-      !transaction.paymentMethod
-    ) {
-      throw new Error("Transação inválida: campos obrigatórios ausentes");
+    if (!transaction.type) {
+      throw new Error("Transação inválida: campo 'type' obrigatório");
     }
 
-    return {
+    if (!transaction.category) {
+      throw new Error("Transação inválida: campo 'category' obrigatório");
+    }
+
+    if (!transaction.paymentMethod) {
+      throw new Error("Transação inválida: campo 'paymentMethod' obrigatório");
+    }
+
+    const finalized: Transaction = {
       name: transaction.name,
       amount: transaction.amount,
       date: transaction.date,
@@ -37,5 +41,7 @@ export class FinalizeTransactionHandler extends AbstractTransactionHandler {
       category: transaction.category,
       paymentMethod: transaction.paymentMethod,
     };
+
+    return finalized;
   }
 }

@@ -7,58 +7,66 @@ import {
 import { AbstractTransactionHandler } from "./abstract-transaction-handler";
 import { detectTransactionDataWithIA } from "@/app/(home)/_actions/category-ia";
 
-export class EnrichWithIAHandler extends AbstractTransactionHandler {
+export class EnrichTransactionWithIAHandler extends AbstractTransactionHandler {
   async handle(
     transaction: Partial<Transaction>,
   ): Promise<Partial<Transaction>> {
-    const needsType = !this.isValidType(transaction.type);
-    const needsCategory = !this.isValidCategory(transaction.category);
-    const needsPayment = !this.isValidPaymentMethod(transaction.paymentMethod);
+    const needsType = !this.isValid(transaction.type, TransactionType);
+    const needsCategory =
+      !transaction.category ||
+      transaction.category === "OTHER" ||
+      !this.isValid(transaction.category, TransactionCategory);
 
-    if (!needsType && !needsCategory && !needsPayment) {
-      return super.handle(transaction);
-    }
-
-    const detectIaTransaction = await detectTransactionDataWithIA(
-      transaction.name ?? "",
+    const needsPayment = !this.isValid(
+      transaction.paymentMethod,
+      TransactionPaymentMethod,
     );
 
     const enriched: Partial<Transaction> = {
-      ...transaction,
-      type: needsType ? detectIaTransaction.type : transaction.type,
-      category: needsCategory
-        ? detectIaTransaction.category
-        : transaction.category,
-      paymentMethod: needsPayment
-        ? detectIaTransaction.paymentMethod
-        : transaction.paymentMethod,
+      name: transaction.name,
+      amount: transaction.amount,
+      date: transaction.date,
+      type: transaction.type,
+      category: transaction.category,
+      paymentMethod: transaction.paymentMethod,
     };
+
+    const rawCategory =
+      transaction.category && transaction.category !== "OTHER"
+        ? transaction.category
+        : undefined;
+
+    console.log("EnrichTransaction: ", enriched);
+
+    if (needsType || needsCategory || needsPayment) {
+      const dataIaResponse = await detectTransactionDataWithIA(
+        transaction.name ?? "",
+        rawCategory,
+      );
+
+      if (needsType) {
+        enriched.type = dataIaResponse.type;
+      }
+
+      if (needsCategory) {
+        enriched.category = dataIaResponse.category;
+      }
+
+      if (needsPayment) {
+        enriched.paymentMethod = dataIaResponse.paymentMethod;
+      }
+    }
 
     return super.handle(enriched);
   }
 
-  private isValidType(value: unknown): value is TransactionType {
-    return (
-      typeof value === "string" &&
-      Object.values(TransactionType).includes(value as TransactionType)
-    );
-  }
-
-  private isValidCategory(value: unknown): value is TransactionCategory {
-    return (
-      typeof value === "string" &&
-      Object.values(TransactionCategory).includes(value as TransactionCategory)
-    );
-  }
-
-  private isValidPaymentMethod(
+  private isValid<T extends string>(
     value: unknown,
-  ): value is TransactionPaymentMethod {
+    enumType: Record<string, T>,
+  ): value is T {
     return (
       typeof value === "string" &&
-      Object.values(TransactionPaymentMethod).includes(
-        value as TransactionPaymentMethod,
-      )
+      (Object.values(enumType) as string[]).includes(value)
     );
   }
 }

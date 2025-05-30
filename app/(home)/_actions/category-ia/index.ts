@@ -35,29 +35,37 @@ const VALID_METHODS: TransactionPaymentMethod[] = [
   "OTHER",
 ];
 
-export async function detectTransactionDataWithIA(title: string): Promise<{
+export async function detectTransactionDataWithIA(
+  title: string,
+  rawCategory?: string,
+): Promise<{
   type: TransactionType;
   category: TransactionCategory;
   paymentMethod: TransactionPaymentMethod;
 }> {
+  const categoryInstruction = rawCategory
+    ? `A categoria informada pelo usuário foi: "${rawCategory}". Ela pode não ser exatamente igual às categorias permitidas. Mapeie para a mais próxima entre: ${VALID_CATEGORIES.join(", ")}.`
+    : "Não há categoria informada. Deduzir com base apenas no título da transação.";
+
   const prompt = `
-    Com base no título da transação abaixo, identifique:
+Você é um sistema de classificação de transações financeiras.
 
-    Por default coloque a forma de pagamento como "CREDIT_CARD".
+Com base nas informações abaixo, retorne:
 
-    - O tipo da transação (TransactionType): EXPENSE, DEPOSIT ou INVESTMENT
-    - A categoria da transação (TransactionCategory): ${VALID_CATEGORIES.join(", ")}
-    - O método de pagamento (TransactionPaymentMethod): ${VALID_METHODS.join(", ")}
+- O tipo da transação (TransactionType): ${VALID_TYPES.join(", ")}
+- A categoria da transação (TransactionCategory): ${VALID_CATEGORIES.join(", ")}
+- O método de pagamento (TransactionPaymentMethod): ${VALID_METHODS.join(", ")}
 
-    Retorne **apenas** no seguinte formato JSON:
-    {
-      "type": "EXPENSE",
-      "category": "FOOD",
-      "paymentMethod": "CREDIT_CARD"
-    }
+Sempre responda no seguinte formato JSON:
+{
+  "type": "EXPENSE",
+  "category": "FOOD",
+  "paymentMethod": "CREDIT_CARD"
+}
 
-    Título: "${title}"
-  `;
+Título da transação: "${title}"
+${categoryInstruction}
+`;
 
   try {
     const completion = await openai.chat.completions.create({
@@ -66,7 +74,7 @@ export async function detectTransactionDataWithIA(title: string): Promise<{
         {
           role: "system",
           content:
-            "Você é um assistente financeiro especializado em classificar transações bancárias para sistemas de controle financeiro.",
+            "Você é um classificador inteligente de transações bancárias.",
         },
         {
           role: "user",
@@ -77,12 +85,6 @@ export async function detectTransactionDataWithIA(title: string): Promise<{
 
     const raw = completion.choices[0].message.content?.trim() ?? "";
     const cleaned = raw.replace(/```json|```/g, "").trim();
-
-    console.log("🔍 Classificando transação:");
-    console.log("📌 Título:", title);
-    console.log("🧾 Resposta da IA (bruta):", raw);
-    console.log("🧾 Resposta da IA (limpa):", cleaned);
-
     const parsed = JSON.parse(cleaned);
 
     const isValid =
@@ -96,7 +98,6 @@ export async function detectTransactionDataWithIA(title: string): Promise<{
     }
 
     console.log("✅ Classificação OK:", parsed);
-
     return parsed;
   } catch (error) {
     console.error("❌ Erro ao classificar transação com IA:", error);
