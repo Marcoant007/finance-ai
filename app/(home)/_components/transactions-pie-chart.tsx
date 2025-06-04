@@ -11,8 +11,8 @@ import {
   ChartTooltipContent,
 } from "@/app/_components/ui/chart";
 import type { TransactionPercentagePerType } from "@/app/_data/get-dashboard/types";
-import { TransactionType } from "@prisma/client";
 import PercentageItem from "./percentag-item";
+import { TransactionType } from "@prisma/client";
 
 const chartConfig = {
   [TransactionType.INVESTMENT]: {
