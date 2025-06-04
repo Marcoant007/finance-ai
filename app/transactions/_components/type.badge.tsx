@@ -1,3 +1,5 @@
+"use client";
+
 import { Badge } from "@/app/_components/ui/badge";
 import { type Transaction, TransactionType } from "@prisma/client";
 import { CircleIcon } from "lucide-react";
