@@ -4,7 +4,7 @@ import { EnrichTransactionWithIAHandler } from "./handlers/enrich-with-ia-handle
 import { FinalizeTransactionHandler } from "./handlers/finalize-transaction-handler";
 
 export function buildTransactionProcessingChain(): {
-  handle(transaction: Partial<Transaction>): Promise<Partial<Transaction>>;
+  handle(transaction: Partial<Transaction>): Promise<Transaction>;
 } {
   const normalize = new NormalizeTransactionHandler();
   const enrich = new EnrichTransactionWithIAHandler();
